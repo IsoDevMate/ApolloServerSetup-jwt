@@ -1,17 +1,17 @@
 const { ApolloServer }  = require('apollo-server');
 const mongoose = require('mongoose');
-
+const dotenv = require('dotenv');
+dotenv.config();
 const typeDefs = require('./graphql/typeDefs');
 const resolvers = require('./graphql/resolvers');
 
-const MONGODB = "mongodb+srv://admin:coopercodes@apolloserversetup.n9ghj.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
-
+const MONGODB = process.env.DATABASE_URL;
 const server = new ApolloServer({
     typeDefs,
     resolvers
 });
-
-mongoose.connect(MONGODB, {useNewUrlParser: true})
+console.log(process.env.DATABASE_URL); 
+mongoose.connect(MONGODB, {writeConcern: { w: 'majority' }})
     .then(() => {
         console.log("MongoDB Connected");
         return server.listen({port: 5000});
